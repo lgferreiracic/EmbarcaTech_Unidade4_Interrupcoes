@@ -48,7 +48,10 @@ pico_generate_pio_header(EmbarcaTech_Unidade4_Interrupcoes ${CMAKE_CURRENT_LIST_
 
 # Add the standard library to the build
 target_link_libraries(EmbarcaTech_Unidade4_Interrupcoes
-        pico_stdlib)
+        pico_stdlib
+        hardware_timer
+        hardware_pio
+        hardware_clocks)
 
 # Add the standard include files to the build
 target_include_directories(EmbarcaTech_Unidade4_Interrupcoes PRIVATE
