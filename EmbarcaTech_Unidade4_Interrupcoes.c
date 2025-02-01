@@ -19,7 +19,11 @@ const uint luminosity_R = 0; // Luminosidade máxima do LED vermelho
 const uint luminosity_G = 0; // Luminosidade máxima do LED verde
 const uint luminosity_B = 200; // Luminosidade máxima do LED azul
 
-int number_ws2812 = 0; // Variável para armazenar o número a ser exibido
+static volatile uint number_ws2812 = 0; // Variável para armazenar o número a ser exibido
+static volatile uint32_t last_time = 0; // Armazena o tempo do último evento (em microssegundos)
+
+// Prototipação da função de interrupção
+static void gpio_irq_handler(uint gpio, uint32_t events);
 
 // Buffers para armazenar quais LEDs estão ligados matriz 5x5
 bool number_0[NUM_PIXELS] = {
@@ -147,6 +151,46 @@ void set_ledS(bool number[NUM_PIXELS], uint8_t r, uint8_t g, uint8_t b)
     }
 }
 
+// Função para exibir o número no display
+void display_number(uint number)
+{
+    switch (number)
+    {
+    case 0:
+        set_ledS(number_0, luminosity_R, luminosity_G, luminosity_B);
+        break;
+    case 1:
+        set_ledS(number_1, luminosity_R, luminosity_G, luminosity_B);
+        break;
+    case 2:
+        set_ledS(number_2, luminosity_R, luminosity_G, luminosity_B);
+        break;
+    case 3:
+        set_ledS(number_3, luminosity_R, luminosity_G, luminosity_B);
+        break;
+    case 4:
+        set_ledS(number_4, luminosity_R, luminosity_G, luminosity_B);
+        break;
+    case 5:
+        set_ledS(number_5, luminosity_R, luminosity_G, luminosity_B);
+        break;
+    case 6:
+        set_ledS(number_6, luminosity_R, luminosity_G, luminosity_B);
+        break;
+    case 7:
+        set_ledS(number_7, luminosity_R, luminosity_G, luminosity_B);
+        break;
+    case 8:
+        set_ledS(number_8, luminosity_R, luminosity_G, luminosity_B);
+        break;
+    case 9:
+        set_ledS(number_9, luminosity_R, luminosity_G, luminosity_B);
+        break;
+    default:
+        break;
+    }
+}
+
 int main()
 {
     // Inicializações
@@ -174,6 +218,10 @@ int main()
     uint sm = pio_claim_unused_sm(pio, true);
     pio_matrix_program_init(pio, sm, offset, WS2812_PIN);
 
+    // Configuração da interrupção com callback
+    gpio_set_irq_enabled_with_callback(button_a, GPIO_IRQ_EDGE_FALL, true, &gpio_irq_handler);
+    gpio_set_irq_enabled_with_callback(button_b, GPIO_IRQ_EDGE_FALL, true, &gpio_irq_handler);
+
     // Loop principal
     while (true)
     {
@@ -182,5 +230,38 @@ int main()
         sleep_ms(TIME);
         gpio_put(led_R, 0);
         sleep_ms(TIME);
+    }
+}
+
+// Função de interrupção com debouncing
+void gpio_irq_handler(uint gpio, uint32_t events)
+{
+    // Obtém o tempo atual em microssegundos
+    uint32_t current_time = to_us_since_boot(get_absolute_time());
+
+    // Verifica se passou tempo suficiente desde o último evento
+    if (current_time - last_time > 200000) // 200 ms de debouncing
+    {
+        last_time = current_time; // Atualiza o tempo do último evento
+
+        if(gpio == button_a)
+        {
+            number_ws2812++; // Incrementa o número a ser exibido
+            if (number_ws2812 > 9) // Se o número for maior que 9, reinicia
+            {
+                number_ws2812 = 0;
+            }
+        }
+        else if(gpio == button_b)
+        {
+            number_ws2812--; // Decrementa o número a ser exibido
+            if (number_ws2812 < 0) // Se o número for menor que 0, reinicia
+            {
+                number_ws2812 = 9;
+            }
+        }
+
+        // Exibe o número no display
+        display_number(number_ws2812);
     }
 }
