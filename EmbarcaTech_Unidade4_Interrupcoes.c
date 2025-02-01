@@ -9,9 +9,9 @@
 #define TIME 200
 
 // Configurações dos pinos
-const uint led_R = 11; // Red=> GPIO11
+const uint led_R = 13; // Red=> GPIO11
 const uint led_B = 12; // Blue => GPIO12
-const uint led_G = 13; // Green => GPIO13
+const uint led_G = 11; // Green => GPIO13
 const uint WS2812_PIN = 7; // WS2812 => GPIO7
 const uint button_a = 5; // Botão A = 5
 const uint button_b = 6; // Botão B = 6 

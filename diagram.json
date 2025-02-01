@@ -52,7 +52,7 @@
       "id": "led1",
       "top": 99.4,
       "left": -178.6,
-      "attrs": { "color": "green" }
+      "attrs": { "color": "red" }
     },
     {
       "type": "wokwi-led",
@@ -61,7 +61,13 @@
       "left": -149.8,
       "attrs": { "color": "blue" }
     },
-    { "type": "wokwi-led", "id": "led3", "top": 99.4, "left": -121, "attrs": { "color": "red" } }
+    {
+      "type": "wokwi-led",
+      "id": "led3",
+      "top": 99.4,
+      "left": -121,
+      "attrs": { "color": "green" }
+    }
   ],
   "connections": [
     [ "neopixels:DIN", "pico:GP7", "green", [ "v-19.2", "h-163.2", "v240", "h172.8", "v-6.35" ] ],
