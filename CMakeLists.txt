@@ -44,7 +44,7 @@ pico_set_program_version(EmbarcaTech_Unidade4_Interrupcoes "0.1")
 pico_enable_stdio_uart(EmbarcaTech_Unidade4_Interrupcoes 0)
 pico_enable_stdio_usb(EmbarcaTech_Unidade4_Interrupcoes 0)
 
-pico_generate_pio_header(EmbarcaTech_Unidade4_Interrupcoes ${CMAKE_CURRENT_LIST_DIR}/WS2812.pio)
+pico_generate_pio_header(EmbarcaTech_Unidade4_Interrupcoes ${CMAKE_CURRENT_LIST_DIR}/ws2812.pio)
 
 # Add the standard library to the build
 target_link_libraries(EmbarcaTech_Unidade4_Interrupcoes
