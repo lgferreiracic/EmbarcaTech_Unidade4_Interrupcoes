@@ -17,7 +17,7 @@ const uint button_a = 5; // Botão A = 5
 const uint button_b = 6; // Botão B = 6 
 const uint luminosity_R = 0; // Luminosidade máxima do LED vermelho
 const uint luminosity_G = 0; // Luminosidade máxima do LED verde
-const uint luminosity_B = 200; // Luminosidade máxima do LED azul
+const uint luminosity_B = 50; // Luminosidade máxima do LED azul
 
 static volatile uint number_ws2812 = 0; // Variável para armazenar o número a ser exibido
 static volatile uint32_t last_time = 0; // Armazena o tempo do último evento (em microssegundos)
@@ -117,17 +117,19 @@ int getIndex(int x, int y) {
     }
 }
 
+// Função para mudar o estado de um LED
 static inline void put_pixel(uint32_t pixel_grb)
 {
     pio_sm_put_blocking(pio0, 0, pixel_grb << 8u);
 }
 
+// Função para converter RGB para um valor de 32 bits
 static inline uint32_t urgb_u32(uint8_t r, uint8_t g, uint8_t b)
 {
     return ((uint32_t)(r) << 8) | ((uint32_t)(g) << 16) | (uint32_t)(b);
 }
 
-
+// Função para definir a cor de todos os LEDs
 void set_ledS(bool number[NUM_PIXELS], uint8_t r, uint8_t g, uint8_t b)
 {
     // Define a cor com base nos parâmetros fornecidos
